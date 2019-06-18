@@ -257,7 +257,6 @@ public final class ActivityThread extends ClientTransactionHandler {
 }
 ```
 
-
 ##### 一个应用中有几个Context对象
 一个应用中Context对象的总数应该等于Activity对象与Service对象之和再加上一个Application。
 

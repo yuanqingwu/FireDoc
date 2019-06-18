@@ -143,7 +143,7 @@ InputMethodManager imm = (InputMethodManager) context.getApplicationContext().ge
 ###### AsyncTask/Runnable以匿名内部类的方式存在，会隐式持有对所在Activity的引用。
 将AsyncTask和Runnable设为静态内部类或独立出来；在线程内部采用弱引用保存Context引用
 
-###### 未及时注销资源导致内存泄漏，如BraodcastReceiver、File、Cursor、Stream、Bitmap等。View没有recyle。
+###### 未及时注销资源导致内存泄漏，如BraodcastReceiver、File、Cursor、Stream、Bitmap等。View没有recycle。
 在Activity销毁的时候要及时关闭或者注销。
 
 BraodcastReceiver：调用unregisterReceiver()注销；
@@ -255,7 +255,7 @@ Android 2.3.3（API10）之前，Bitmap的像素数据存放在Native内存，�
 
 ###### Bitmap占用内存的计算
 
-- getByteCount()方法是在API12加入的，代表存储Bitmap的色素需要的最少内存；
+- getByteCount()方法是在API12加入的，代表存储Bitmap的像素需要的最少内存；
 - getAllocationByteCount()在API19加入，代表在内存中为Bitmap分配的内存大小；
 - 在复用Bitmap的情况下，getAllocationByteCount()可能会比getByteCount()大；
 
@@ -365,11 +365,6 @@ I/lz: bitmapReuse：ByteCount = 608256:::bitmapReuse：AllocationByteCount = 243
 2. Service创建完毕，在规定的时间之内执行完毕onCreate()方法就移除这个消息，就不会产生ANR了；
 3. 在规定的时间之内没有完成onCreate()的调用，消息被执行，ANR发生。
 
-作者：头条祁同伟
-链接：https://www.jianshu.com/p/af13abc5f0c8
-来源：简书
-简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。
-
 ## 网络优化
 
 ###### Network Monitor，Charles、Fiddler等抓包工具
@@ -450,6 +445,9 @@ PowerManager pm = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE)
 
 
 ## 包大小优化
+
+https://developer.android.google.cn/studio/build/shrink-code
+
 ###### 代码混淆。使用proGuard 代码混淆器工具，它包括压缩、优化、混淆等功能。
 
 ###### 避免重复功能的库
@@ -469,6 +467,19 @@ aaptOptions {
     cruncherEnabled = false
 }
 ```
+
+只保留指定的语言文件
+```
+resConfigs('zh-rCN','en')
+```
+只保留指定的SO：
+
+```
+ndk{
+    abiFilters('armeabi','armeabi-v7a')
+    }
+```
+使用Tint着色器
 
 ###### 使用矢量图
 使用矢量图片能够有效的减少App中图片所占用的大小，矢量图形在Android中表示为VectorDrawable对象。

@@ -527,6 +527,94 @@ Parcelable与Serializable的性能比较
 - TextureView是一个可以把内容流作为外部纹理输出在上面的View, 它本身需要是一个硬件加速层。
 事实上TextureView本身也包含了SurfaceTexture, 它与SurfaceView+SurfaceTexture组合相比可以完成类似的功能（即把内容流上的图像转成纹理，然后输出）, 区别在于TextureView是在View hierachy中做绘制，因此一般它是在主线程上做的（在Android 5.0引入渲染线程后，它是在渲染线程中做的）。而SurfaceView+SurfaceTexture在单独的Surface上做绘制，可以是用户提供的线程，而不是系统的主线程或是渲染线程。另外，与TextureView相比，它还有个好处是可以用Hardware overlay进行显示。
 
+## FragmentTransaction的commitAllowingStateLoss 和commit的区别
+
+BackStackRecord是FragmentTransaction抽象类的实现：
+
+```
+final class BackStackRecord extends FragmentTransaction implements
+        FragmentManager.BackStackEntry, FragmentManagerImpl.OpGenerator {
+
+    ......
+    
+    @Override
+    public int commit() {
+        return commitInternal(false);
+    }
+
+    @Override
+    public int commitAllowingStateLoss() {
+        return commitInternal(true);
+    }
+    
+    
+    @Override
+    public void commitNow() {
+        disallowAddToBackStack();
+        mManager.execSingleAction(this, false);
+    }
+
+    @Override
+    public void commitNowAllowingStateLoss() {
+        disallowAddToBackStack();
+        mManager.execSingleAction(this, true);
+    }
+    
+        int commitInternal(boolean allowStateLoss) {
+        if (mCommitted) throw new IllegalStateException("commit already called");
+        if (FragmentManagerImpl.DEBUG) {
+            Log.v(TAG, "Commit: " + this);
+            LogWriter logw = new LogWriter(TAG);
+            PrintWriter pw = new PrintWriter(logw);
+            dump("  ", null, pw, null);
+            pw.close();
+        }
+        mCommitted = true;
+        if (mAddToBackStack) {
+            mIndex = mManager.allocBackStackIndex(this);
+        } else {
+            mIndex = -1;
+        }
+        mManager.enqueueAction(this, allowStateLoss);
+        return mIndex;
+    }
+}
+```
+
+调用FragmentManager的enqueueAction方法
+```
+public abstract class FragmentManager {
+
+    /**
+     * Adds an action to the queue of pending actions.
+     *
+     * @param action the action to add
+     * @param allowStateLoss whether to allow loss of state information
+     * @throws IllegalStateException if the activity has been destroyed
+     */
+    public void enqueueAction(OpGenerator action, boolean allowStateLoss) {
+        if (!allowStateLoss) {
+            checkStateLoss();
+        }
+        synchronized (this) {
+            if (mDestroyed || mHost == null) {
+                if (allowStateLoss) {
+                    // This FragmentManager isn't attached, so drop the entire transaction.
+                    return;
+                }
+                throw new IllegalStateException("Activity has been destroyed");
+            }
+            if (mPendingActions == null) {
+                mPendingActions = new ArrayList<>();
+            }
+            mPendingActions.add(action);
+            scheduleCommit();
+        }
+    }
+}
+```
+
+
 ## Fragment的懒加载实现，参数传递与保存
 在Fragment中有一个setUserVisibleHint这个方法，而且这个方法是优于onCreate()方法的，所以也可以作为Fragment的一个生命周期来看待，它会通过isVisibleToUser告诉我们当前Fragment我们是否可见，我们可以在可见的时候再进行网络加载。
 

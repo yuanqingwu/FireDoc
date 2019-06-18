@@ -360,6 +360,15 @@ task testBoth {
 
 ![image](https://img-blog.csdn.net/2018051022062378?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ppd2FuZ18=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
+### 项目结构
+
+Gradle使用一个叫做源集(Source set) 的概念。Gradle的官方文档是这么解释的：一个源集就是一组文件，它们会被一起执行和编译。对于一个android项目而言，main就是一个源集，它包含了所有的源代码和资源，是应用程序默认版本的源集。当你开始为Android应用程序编写测试代码时，你可以把所有的测试相关的源代码都放在一个独立的源集中，该源集被叫做androidTest,它只包含测试代码。
+
+### Gradle Wrapper
+Gradle Wrapper为微软的Windows操作系统提供了一个batch文件，为其他操作系统提供了一个shell脚本。当你运行这段脚本时，需要的Gradle版本会被自动下载（如果不存在）和使用。其原理是，每个需要构建应用的开发者或自构建系统可以仅仅运行Wrapper,然后由Wrapper搞定剩余部分。
+
+Gradle建议把Wrapper文件添加到你的版本控制系统中。
+
 ### 多项目构建
 
 定义一个多项目构建工程需要在根目录创建一个setting 配置文件来指明构建包含哪些项目。并且这个文件必需叫 settings.gradle 本例的配置文件如下:

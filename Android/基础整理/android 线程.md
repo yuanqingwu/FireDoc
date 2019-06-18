@@ -1,30 +1,34 @@
-### sycronized关键字的类锁对象锁
+## Synchronized原理 
+https://blog.csdn.net/javazejian/article/details/72828483
+## Volatile实现原理 
+[深入分析Volatile的实现原理](http://ifeve.com/volatile/)
 
-- synchronized修饰非静态方法、同步代码块的synchronized (this)用法和synchronized (非this对象)的用法锁的是对象，线程想要执行对应同步代码，需要获得对象锁。
-- synchronized修饰静态方法以及同步代码块的synchronized (类.class)用法锁的是类，线程想要执行对应同步代码，需要获得类锁。
+[内存屏障和volatile语义](https://blog.csdn.net/kuangzhanshatian/article/details/81738599)
 
-们知道，类的对象实例可以有很多个，但是每个类只有一个class对象，所以不同对象实例的对象锁是互不干扰的，但是每个类只有一个类锁。但是有一点必须注意的是，其实类锁只是一个概念上的东西，并不是真实存在的，它只是用来帮助我们理解锁定实例方法和静态方法的区别的
+Volatile是轻量级的synchronized，它在多处理器开发中保证了共享变量的“可见性”。可见性的意思是当一个线程修改一个共享变量时，另外一个线程能读到这个修改的值。它在某些情况下比synchronized的开销更小
 
-类锁和对象锁是两个不一样的锁，控制着不同的区域，它们是互不干扰的。
+Java语言规范第三版中对volatile的定义如下：java编程语言允许线程访问共享变量，为了确保共享变量能被准确和一致的更新，线程应该确保通过排他锁单独获得这个变量。Java语言提供了volatile，在某些情况下比锁更加方便。如果一个字段被声明成volatile，java线程内存模型确保所有线程看到这个变量的值是一致的
 
-### ReenTrantLock可重入锁跟synchronized关键字之间的区别
-###### 锁的实现：
-Synchronized是依赖于JVM实现的，而ReenTrantLock是JDK实现的
 
-###### 性能的区别：
-在Synchronized优化以前，synchronized的性能是比ReenTrantLock差很多的，但是自从Synchronized引入了偏向锁，轻量级锁（自旋锁）后，两者的性能就差不多了，在两种方法都可用的情况下，官方甚至建议使用synchronized
+**对volatile变量运算操作在多线程环境并不保证安全性**
+比如对于i++方法需要用synchronize修饰
 
-###### 功能区别
-便利性：很明显Synchronized的使用比较方便简洁，并且由编译器去保证锁的加锁和释放，而ReenTrantLock需要手工声明来加锁和释放锁，为了避免忘记手工释放锁造成死锁，所以最好在finally中声明释放锁。
 
-锁的细粒度和灵活度：很明显ReenTrantLock优于Synchronized
+## 线程池核心线程数一般定义多少，为什么
+IO密集型=2Ncpu（常出现于线程中：数据库数据交互、文件上传下载、网络数据传输等等）
 
-###### ReenTrantLock独有的能力：
-1.ReenTrantLock可以指定是公平锁还是非公平锁。而synchronized只能是非公平锁。所谓的公平锁就是先等待的线程先获得锁。
+计算密集型=Ncpu（常出现于线程中：复杂算法）
 
-2.ReenTrantLock提供了一个Condition（条件）类，用来实现分组唤醒需要唤醒的线程们，而不是像synchronized要么随机唤醒一个线程要么唤醒全部线程。
+java中：Ncpu=Runtime.getRuntime().availableProcessors()
 
-3.ReenTrantLock提供了一种能够中断等待锁的线程的机制，通过lock.lockInterruptibly()来实现这个机制。
+
+一般使用线程池，按照如下顺序依次考虑（只有前者不满足场景需求，才考虑后者）：
+
+newCachedThreadPool-->newFixedThreadPool(int threadSize)-->ThreadPoolExecutor
+
+newCachedThreadPool不需要指定任何参数
+newFixedThreadPool需要指定线程池数（核心线程数==最大线程数）
+ThreadPoolExecutor需要指定核心线程数、最大线程数、闲置超时时间、队列、队列容量，甚至还有回绝策略和线程工厂
 
 ### wait() 和 sleep() 的区别
 ##### wait
@@ -75,7 +79,7 @@ sleep是Thread类的方法，导致此线程暂停执行指定时间，给其他
 ###### 是否可以传入参数
 sleep()方法必须传入参数，参数就是休眠时间，时间到了就会自动醒来。
 
-wait()方法可以传入参数也可以不传入参数，传入参数就是在参数结束的时间后开始等待，不传入参数就是直接等待。
+wait()方法可以传入参数也可以不传入参数，传入参数就是在参数结束的时间后开始等待，不穿如参数就是直接等待。
 
 ###### 是否需要捕获异常
 sleep方法必须要捕获异常，而wait方法不需要捕获异常。
@@ -162,6 +166,6 @@ ReentrantReadWriteLock
 
 　　如果读写锁当前没有读者，也没有写者，那么写者可以立刻获的读写锁，否则必须自旋，直到没有任何的写锁或者读锁存在。如果读写锁没有写锁，那么读锁可以立马获取，否则必须等待写锁释放。(但是有一个例外，就是读写锁中的锁降级操作，当同一个线程获取写锁后，在写锁没有释放的情况下可以获取读锁再释放读锁这就是锁降级的一个过程)
 　　
-　
+　　
 
 
