@@ -31,6 +31,10 @@ adb shell pm dump 包名 | grep version
 ```
 adb shell pm dump 包名 | grep version
 ```
+#### 查看应用签名
+```
+keytool -printcert -jarfile
+```
 
 ### 查看当前显示在前台的activity
 ```
@@ -43,7 +47,26 @@ windows:
 adb shell dumpsys activity | findstr "mFocusedActivity"
 ```
 
+### 从Android 手机取出已安装apk文件
+查看包名 如com.zhangyou.plamreading
 
+$ adb shell pm path com.zhangyou.plamreading
+
+得到package:/data/app/com.zhangyou.plamreading-GYHKFVL_NdPeZUWBnVmJQA==/base.apk
+然后
+
+$ adb pull /data/app/com.zhangyou.plamreading-GYHKFVL_NdPeZUWBnVmJQA==/base.apk .
+
+即可保存在当前目录
+签名相关
+
+### 设置logcat日志缓冲区大小
+设置为20M：
+adb logcat -G 20M
+查看设置结果：
+adb logcat -g     
+
+重启以后需要再次设置，也许需要重启adb服务
 
 ###  signapk.jar给apk签名
 ```
