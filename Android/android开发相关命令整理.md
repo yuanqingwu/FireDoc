@@ -27,13 +27,31 @@ adb shell pm dump 包名 | grep version
 
 ```
 
+### 结束应用进程
+adb shell am force-stop XXX
+
+```
+if (app.persistent && !evenPersistent) {
+// we don't kill persistent processes
+continue;
+}
+应用中设置了android:persistent="true"，则不能被杀死
+```
+
+### 查看安装的应用包名
+adb shell pm list packages | grep xxx
+
+查看包安装位置:
+adb shell pm list packages -f | grep xxx
+
+
 #### 查看应用版本
 ```
 adb shell pm dump 包名 | grep version
 ```
 #### 查看应用签名
 ```
-keytool -printcert -jarfile
+keytool -printcert -jarfile xxx.apk
 ```
 
 ### 查看当前显示在前台的activity
@@ -45,6 +63,15 @@ adb shell dumpsys activity | grep "mFocusedActivity"
 windows:
 
 adb shell dumpsys activity | findstr "mFocusedActivity"
+```
+
+### 查看主动启动activity的日志
+
+```
+adb logcat |grep -inE "start u0"
+
+过滤出来的日志如下：
+4260:01-01 08:04:26.261   950  3127 I ActivityManager: START u0 {flg=0x10000000 cmp=com.wyq.appstore/.main.MainActivity (has extras)} from uid 10003
 ```
 
 ### 从Android 手机取出已安装apk文件
@@ -75,4 +102,7 @@ adb logcat -g
 java -jar signapk.jar platform.x509.pem platform.pk8 app-release.apk app_release_signed.apk
 ```
 
-
+使用apksigner.jar给APK签名：
+```
+java -jar apksigner.jar sign --ks android_platform.keystore --ks-key-alias android_platform --ks-pass pass:android --key-pass pass:android --out app_signed.apk app.apk
+```

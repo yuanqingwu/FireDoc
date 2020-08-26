@@ -68,3 +68,14 @@ sudo boot-repair
 设置IP与子网掩码：sudo ifconfig enp0s31f6 11.10.10.3 netmask 255.255.255.0
 
 设置网关：sudo route add default gw 11.10.10.10
+
+
+### 查看本机IP地址
+```
+    ip addr show   (  同：ip a)
+
+    如果你希望获得最少的细节：hostname -I
+
+
+    老用户可能会想要使用 ifconfig（net-tools 软件包的一部分），但该程序已被弃用。一些较新的 Linux 发行版不再包含此软件包，如果你尝试运行它，你将看到 ifconfig 命令未找到的错误。
+```

@@ -376,3 +376,14 @@ Gradle建议把Wrapper文件添加到你的版本控制系统中。
 ```
 include "shared", "api", "services:webservice", "services:shared"
 ```
+
+### 强制清除依赖缓存
+```
+Windows:    
+gradlew build --refresh-dependencies 
+
+
+Mac:
+./gradlew build --refresh-dependencies
+```
+

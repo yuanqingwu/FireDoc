@@ -70,6 +70,8 @@ git shortlog 根据提交者的名字分组显示提交 log
 
 git reflog 查看所有产生的 commit 记录，包括 reset 时移除的，并且使用 reset --hard 指令也会将内容恢复到对应版本
 
+git log --name-status  附带文件修改信息
+
 
 ## diff 查看改动
 git diff 查看改动 红色代表删除的，绿色代表增加的，git diff 只能查看没有添加到缓存区的差异，就是没有git add的文件
