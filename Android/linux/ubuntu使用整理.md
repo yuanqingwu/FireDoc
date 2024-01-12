@@ -79,3 +79,86 @@ sudo boot-repair
 
     老用户可能会想要使用 ifconfig（net-tools 软件包的一部分），但该程序已被弃用。一些较新的 Linux 发行版不再包含此软件包，如果你尝试运行它，你将看到 ifconfig 命令未找到的错误。
 ```
+
+
+
+### 安装企业微信
+https://github.com/wszqkzqk/deepin-wine-ubuntu
+
+软件包列表：https://deepin-wine.i-m.dev/
+
+添加库：
+wget -qO- https://deepin-wine.i-m.dev/setup.sh | sudo sh
+
+sudo apt install ... 安装对应软件包 
+
+例如：
+安装企业微信： sudo apt install com.qq.weixin.work.deepin
+应用图标需要注销重登录后才会出现
+
+
+### 完美解决ubuntu20中tracker占用过多cpu，硬盘的bug
+ubuntu20中磁盘不够用时可按如下操作。500G的硬盘，tracker数据库占了100多G。
+https://zhuanlan.zhihu.com/p/360892389
+
+
+
+### ubuntu解压ZIP乱码
+##### 一、通过unzip行命令解压，指定字符集
+由于zip格式中并没有指定编码格式，Windows下生成的zip文件中的编码是GBK/GB2312等，因此，导致这些zip文件在Linux下解压时出现乱码问题，因为Linux下的默认编码是UTF8。目前网上流行的是unzip -O cp936的方法，但一些linux发行版unzip是没有-O这个选项的。Ubuntu 12.04后续版本是有的。
+命令格式：
+------------------------------------------------------------
+pipci@Ubuntu:~$ unzip -O CP936 xxx.zip
+
+下面这两个参数也行
+unzip -O GBK
+unzip -O GB18030
+
+##### 二、通过unar命令最简单
+
+1、安装unar软件
+-----------------------------------------------
+root@Ubuntu:~# apt install unar
+-----------------------------------------------
+
+2、命令格式：
+-------------------------------------------------------------------------------------------------------
+pipci@Ubuntu:~$ unar xxx.zip                        #不需要加参数，自动识别编码
+-------------------------------------------------------------------------------------------------------
+
+
+3.unar常用选项解释
+
+参数[-o]
+解释：指定解压结果保存的位置
+~$ unar test.zip -o /home/dir/
+
+参数[-e]
+解释：指定编码
+~$ unar -e GBK test.zip
+
+参数[-p]
+解释：指定解压密码
+~$ unar -p 123456 test.zip
+
+4、列出压缩包内容
+
+~$ lsar  xxx.zip
+
+
+
+### 创建或修改应用图标
+
+系统 .desktop 文件存放在文件夹/usr/share/applications/中。
+
+创建或者修改：sudo gedit xxxx.desktop
+
+改变权限：
+sudo chown user xxxx.desktop
+sudo chmod 755 xxxx.desktop
+
+复制到桌面：
+cp xxxx.desktop /home/user/Desktop/
+
+双击刚刚复制的xxxx.desktop文件，点击Trust and Launch
+

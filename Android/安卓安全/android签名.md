@@ -64,3 +64,7 @@ DER -in private.rsa.pem -inform PEM -out private.pk8 接下来输入密码*
 
 4.用法
 java -jar signapk.jar cert.x509.pem private.pk8 unsigned.apk signed.apk
+
+
+# AOSP系统签名文件
+位置：build/make/target/product/security 文件夹下面的platform.x509.pem等文件

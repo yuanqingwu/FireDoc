@@ -38,6 +38,9 @@ continue;
 应用中设置了android:persistent="true"，则不能被杀死
 ```
 
+### adb启动分屏
+adb shell am start -n 应用的包名/Activity名称  --stack 3
+
 ### 查看安装的应用包名
 adb shell pm list packages | grep xxx
 
@@ -53,6 +56,11 @@ adb shell pm dump 包名 | grep version
 ```
 keytool -printcert -jarfile xxx.apk
 ```
+
+### 打印当前系统信息（adb shell dumpsys）
+1.通过"adb shell dumpsys"或"adb shell service list"获取运行的所有system service
+2.在dumpsys后面加上上面查到的service名字，查看指定的service信息
+3.添加-h查看帮助信息，例如通过"adb shell dumpsys window -h"查看此service支持的额外参数
 
 ### 查看当前显示在前台的activity
 ```
@@ -73,6 +81,19 @@ adb logcat |grep -inE "start u0"
 过滤出来的日志如下：
 4260:01-01 08:04:26.261   950  3127 I ActivityManager: START u0 {flg=0x10000000 cmp=com.wyq.appstore/.main.MainActivity (has extras)} from uid 10003
 ```
+
+### adb查看activity信息
+dumpsys activity recents
+
+dumpsys activity activities
+
+dumpsys activity processes
+
+### adb查看windows信息
+dumpsys window windows
+
+### 查看系统日志路径
+adb shell getprop vendor.MB.realpath
 
 ### 从Android 手机取出已安装apk文件
 查看包名 如com.zhangyou.plamreading
@@ -106,3 +127,21 @@ java -jar signapk.jar platform.x509.pem platform.pk8 app-release.apk app_release
 ```
 java -jar apksigner.jar sign --ks android_platform.keystore --ks-key-alias android_platform --ks-pass pass:android --key-pass pass:android --out app_signed.apk app.apk
 ```
+
+### remount 系统
+mount -o remount -rw /system
+
+mount -o remount,rw /system
+
+一般在终端下操作Android系统，我们访问系统分区的时候，经常遇到Only Read的问题，此时需要以读写方式重新挂载需要操作的分区
+
+ 
+1、重新挂载根分区  mount -o remount  / 
+
+ 
+2、以读写的模式重新挂载 根分区   mount -o remount, rw /
+ 
+3、以不含suid的模式重新挂载根分区  mount -o remount, nosuid / 
+ 
+4、重新挂载system分区，这个也是我个人在开发的时候用得最多的，因为我经常需要读写system/app/目录下系统自带的apk安装包。
+mount -o remount, system/

@@ -8,6 +8,11 @@ https://blog.csdn.net/qq_19923217/article/details/81240027
 Android 9 SELinux:
 https://www.jianshu.com/p/e95cd0c17adc
 
+## SELinux策略编写
+
+参考：https://source.android.google.cn/security/selinux/validate#using_audit2allow
+通常情况下，audit2allow 给出的声明建议只是一个大致的基础。在添加这些声明后，您可能需要更改来源域和目标标签，并纳入适当的宏，才能实现良好的政策配置。
+
 ## SELinux
 SELinux是「Security-Enhanced Linux」的简称，是美国国家安全局「NSA=The National Security Agency」 和SCC（Secure Computing Corporation）开发的 Linux的一个扩张强制访问控制安全模块。原先是在Fluke上开发的，2000年以 GNU GPL 发布。
 

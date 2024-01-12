@@ -8,6 +8,8 @@ https://docs.gradle.org/current/userguide/java_plugin.html
 
 [plugin 实战包体积瘦身](https://blog.csdn.net/ziwang_/article/details/80474952)
 
+[Android Gradle Plugin打包Apk过程中的Transform API](https://www.jianshu.com/p/811b0d0975ef)
+
 [Android 热修复 Tinker Gradle Plugin解析](https://blog.csdn.net/lmj623565791/article/details/72667669)
 ### Groovy 
 
@@ -377,7 +379,7 @@ Gradle建议把Wrapper文件添加到你的版本控制系统中。
 include "shared", "api", "services:webservice", "services:shared"
 ```
 
-### 强制清除依赖缓存
+### 强制清除gradle依赖缓存
 ```
 Windows:    
 gradlew build --refresh-dependencies 

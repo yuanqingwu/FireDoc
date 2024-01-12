@@ -1691,6 +1691,8 @@ public boolean dispatchTouchEvent(MotionEvent ev){
 如果一个View的onTouchEvent返回false,那么它的父容器的onTouchEvent将会被调用，以此类推。如果所有元素都不处理这个事件，那么这个事件将会最终传递给Activity处理，即Activity的onTouchEvent方法会被调用。
 
 
+[Android 事件分发机制的设计与实现](https://juejin.cn/post/6844903926446161927)
+
 ### 动画
 ##### 补间动画（View动画）
 
